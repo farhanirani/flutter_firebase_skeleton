@@ -24,7 +24,8 @@ class _SignUpPageState extends State<SignUpPage> {
     if (passwordConfirmed()) {
       try {
         // create user
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        UserCredential res =
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
         );
@@ -34,6 +35,7 @@ class _SignUpPageState extends State<SignUpPage> {
           'name': _nameController.text.trim(),
           'age': int.parse(_ageController.text.trim()),
           'email': _emailController.text.trim(),
+          'uid': res.user?.uid,
         });
       } on FirebaseAuthException catch (e) {
         showDialog(
@@ -132,6 +134,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
                   child: TextField(
+                    keyboardType: TextInputType.emailAddress,
                     controller: _emailController,
 
                     // styles
