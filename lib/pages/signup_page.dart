@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -15,22 +17,37 @@ class _SignUpPageState extends State<SignUpPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _verifyPasswordController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _ageController = TextEditingController();
 
   Future signUp() async {
     if (passwordConfirmed()) {
       try {
+        // create user
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
         );
+
+        // save user details
+        await FirebaseFirestore.instance.collection('users').add({
+          'name': _nameController.text.trim(),
+          'age': int.parse(_ageController.text.trim()),
+          'email': _emailController.text.trim(),
+        });
       } on FirebaseAuthException catch (e) {
-        print(e);
         showDialog(
             context: context,
             builder: (context) {
               return AlertDialog(
                 content: Text(e.message.toString()),
               );
+            });
+      } on Exception catch (e) {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(content: Text(e.toString()));
             });
       }
     } else {
@@ -53,12 +70,14 @@ class _SignUpPageState extends State<SignUpPage> {
     }
   }
 
-// memory management
+  // memory management
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     _verifyPasswordController.dispose();
+    _nameController.dispose();
+    _ageController.dispose();
     super.dispose();
   }
 
@@ -72,12 +91,6 @@ class _SignUpPageState extends State<SignUpPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(
-                  Icons.add_box_outlined,
-                  size: 38,
-                ),
-                const SizedBox(height: 36),
-
                 // welcome text
                 Text(
                   "Hello There",
@@ -90,6 +103,30 @@ class _SignUpPageState extends State<SignUpPage> {
                   style: TextStyle(fontSize: 20),
                 ),
                 const SizedBox(height: 50),
+
+                // name field
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  child: TextField(
+                    controller: _nameController,
+
+                    // styles
+                    decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(color: Colors.deepPurple),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        hintText: 'Name',
+                        fillColor: Colors.grey[200],
+                        filled: true),
+                  ),
+                ),
+                const SizedBox(height: 10),
 
                 // email field
                 Padding(
@@ -109,6 +146,35 @@ class _SignUpPageState extends State<SignUpPage> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         hintText: 'Email',
+                        fillColor: Colors.grey[200],
+                        filled: true),
+                  ),
+                ),
+                const SizedBox(height: 10),
+
+                // age field
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  child: TextField(
+                    keyboardType: TextInputType.number,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly
+                    ],
+
+                    controller: _ageController,
+
+                    // styles
+                    decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(color: Colors.deepPurple),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        hintText: 'Age',
                         fillColor: Colors.grey[200],
                         filled: true),
                   ),
