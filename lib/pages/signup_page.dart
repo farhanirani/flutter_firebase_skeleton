@@ -2,24 +2,36 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class LoginPage extends StatefulWidget {
-  final VoidCallback showSignUpPage;
-  const LoginPage({super.key, required this.showSignUpPage});
+class SignUpPage extends StatefulWidget {
+  final VoidCallback showLoginPage;
+  const SignUpPage({super.key, required this.showLoginPage});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<SignUpPage> createState() => _SignUpPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SignUpPageState extends State<SignUpPage> {
   // text controller
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _verifyPasswordController = TextEditingController();
 
-  Future signIn() async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: _emailController.text.trim(),
-      password: _passwordController.text.trim(),
-    );
+  Future signUp() async {
+    if (passwordConfirmed()) {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+    } else {}
+  }
+
+  bool passwordConfirmed() {
+    if (_passwordController.text.trim() ==
+        _verifyPasswordController.text.trim()) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
 // memory management
@@ -27,6 +39,7 @@ class _LoginPageState extends State<LoginPage> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _verifyPasswordController.dispose();
     super.dispose();
   }
 
@@ -41,20 +54,20 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Icon(
-                  Icons.login,
+                  Icons.add_box_outlined,
                   size: 38,
                 ),
                 const SizedBox(height: 36),
 
                 // welcome text
                 Text(
-                  "Hello Again!",
+                  "Hello There",
                   style: GoogleFonts.bebasNeue(fontSize: 54),
                 ),
                 const SizedBox(height: 10),
 
                 const Text(
-                  "Welcome back, you've been missed",
+                  "Register below with your details",
                   style: TextStyle(fontSize: 20),
                 ),
                 const SizedBox(height: 50),
@@ -74,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
                         focusedBorder: OutlineInputBorder(
                           borderSide:
                               const BorderSide(color: Colors.deepPurple),
-                          borderRadius: BorderRadius.circular(2),
+                          borderRadius: BorderRadius.circular(8),
                         ),
                         hintText: 'Email',
                         fillColor: Colors.grey[200],
@@ -99,20 +112,45 @@ class _LoginPageState extends State<LoginPage> {
                         focusedBorder: OutlineInputBorder(
                           borderSide:
                               const BorderSide(color: Colors.deepPurple),
-                          borderRadius: BorderRadius.circular(2),
+                          borderRadius: BorderRadius.circular(8),
                         ),
                         hintText: 'Password',
                         fillColor: Colors.grey[200],
                         filled: true),
                   ),
                 ),
+                const SizedBox(height: 10),
+
+                // verify password field
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  child: TextField(
+                    controller: _verifyPasswordController,
+                    obscureText: true,
+
+                    // styles
+                    decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(color: Colors.deepPurple),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        hintText: 'Verify Password',
+                        fillColor: Colors.grey[200],
+                        filled: true),
+                  ),
+                ),
                 const SizedBox(height: 20),
 
-                // sign in button
+                // sign up button
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
                   child: GestureDetector(
-                    onTap: signIn,
+                    onTap: signUp,
                     child: Container(
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
@@ -120,7 +158,7 @@ class _LoginPageState extends State<LoginPage> {
                           borderRadius: BorderRadius.circular(12)),
                       child: const Center(
                         child: Text(
-                          'Sign In',
+                          'Sign Up',
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 18,
@@ -137,13 +175,13 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      'New User? ',
+                      'Already a user? ',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     GestureDetector(
-                      onTap: widget.showSignUpPage,
+                      onTap: widget.showLoginPage,
                       child: Text(
-                        'Register now',
+                        'Login Now',
                         style: TextStyle(
                             color: Colors.blueAccent[400],
                             fontWeight: FontWeight.bold),
