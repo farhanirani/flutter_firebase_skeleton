@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth_mitch/pages/forgot_pw_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -104,6 +105,31 @@ class _LoginPageState extends State<LoginPage> {
                         hintText: 'Password',
                         fillColor: Colors.grey[200],
                         filled: true),
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                // forgot password link
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return const ForgotPasswordPage();
+                          }));
+                        },
+                        child: Text(
+                          'Forgot Password?',
+                          style: TextStyle(
+                              color: Colors.blueAccent[400],
+                              fontWeight: FontWeight.bold),
+                        ),
+                      )
+                    ],
                   ),
                 ),
                 const SizedBox(height: 20),
