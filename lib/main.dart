@@ -1,4 +1,5 @@
 import 'package:firebase_auth_mitch/auth/main_page.dart';
+import 'package:firebase_auth_mitch/pages/forgot_pw_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -19,10 +20,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        theme: ThemeData(
-          primarySwatch: Colors.deepPurple,
-        ),
-        debugShowCheckedModeBanner: false,
-        home: const MainPage());
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(primarySwatch: Colors.deepPurple),
+      home: const MainPage(),
+      routes: {
+        '/forgotPassword': (context) => const ForgotPasswordPage(),
+      },
+    );
   }
 }

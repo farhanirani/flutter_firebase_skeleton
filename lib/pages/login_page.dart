@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_auth_mitch/pages/forgot_pw_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -139,10 +138,7 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return const ForgotPasswordPage();
-                          }));
+                          Navigator.pushNamed(context, '/forgotPassword');
                         },
                         child: Text(
                           'Forgot Password?',
