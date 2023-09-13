@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth_mitch/auth/auth_provider.dart';
+import 'package:firebase_auth_mitch/components/square_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -276,7 +278,50 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     )
                   ],
-                )
+                ),
+                const SizedBox(height: 40),
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Divider(
+                          thickness: 0.5,
+                          color: Colors.grey[400],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Text(
+                          'Or Sign Up Using',
+                          style: TextStyle(color: Colors.grey[400]),
+                        ),
+                      ),
+                      Expanded(
+                        child: Divider(
+                          thickness: 0.5,
+                          color: Colors.grey[400],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 40),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SquareTile(
+                        onTap: () => AuthProvider().googleLogin(),
+                        imagePath: 'lib/images/google.png'),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    SquareTile(onTap: () {}, imagePath: 'lib/images/apple.png'),
+                  ],
+                ),
+                const SizedBox(height: 40),
               ],
             ),
           ),

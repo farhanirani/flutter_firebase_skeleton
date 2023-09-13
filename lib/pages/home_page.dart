@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_auth_mitch/controllers/get_user_details.dart';
+import 'package:firebase_auth_mitch/api/get_user_details.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
